@@ -7,21 +7,27 @@ include Interact
 game = Interact.io_new_game
 print_type = 0
 
+# loop action menu until return a game over situation:
+# left cells = 0 || click a bomb
 loop do
   Interact.show_menu
   option = gets.chomp
 
   case option
+  # click cell
   when 'c'
     system 'clear'
     Interact.click_cell(game)
+  # set flag
   when 'f'
     system 'clear'
     Interact.set_flag(game)
+  # change print view
   when 'p'
     system 'clear'
     print_type += 1
-    puts "Visualização do tabuleiro alterada!"
+    puts "Visualização do tabuleiro alterada!\n"
+  # show table state
   when 't'
     system 'clear'
     if print_type%2 == 0
@@ -29,6 +35,7 @@ loop do
     else
       PrettyPrinter.new.print_table(game.board_state)
     end
+  # x-ray view
   when 'x'
     system 'clear'
     if print_type%2 == 0
@@ -36,16 +43,20 @@ loop do
     else
       PrettyPrinter.new.print_table(game.board_state({xray:true}))
     end
+  # exit game
   when 'e'
+    # exit game implies lost
     break
   end
 
+  # after any action, show the board state
   if print_type%2 == 0 && option != 't' && option != 'x'
     Printer.new.print_table(game.board_state)
   elsif option != 't' && option != 'x'
     PrettyPrinter.new.print_table(game.board_state)
   end
 
+  # check if a game over situation occurs
   if game.still_playing?
     next
   else
@@ -53,6 +64,7 @@ loop do
   end
 end
 
+# show this message when game over (victory or lost)
 system 'clear'
 puts "\t--------------------FIM DE JOGO--------------------
     \t---------------------------------------------------"
