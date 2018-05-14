@@ -1,5 +1,6 @@
 require 'colorize'
 
+# Cell class defines the cells property and behavior
 class Cell
 
   attr_accessor :row, :col, :discovered, :flagged, :neighbor_bombs, :is_bomb
@@ -12,7 +13,8 @@ class Cell
     @neighbor_bombs = 0
     @is_bomb = false
   end
-
+  
+  # what if the cell is clicked
   def onclick_action(game)
     if @flagged
       puts "Posição possui flag!\n".colorize(:yellow)
@@ -29,6 +31,8 @@ class Cell
     end
   end
 
+  # if cell has no neighbor bombs, check 8-neighborhood cell and expand
+  # recursively until reach a cell with neighbor bombs
   def expand_cell(game)
     for r in (row - 1..row + 1)
       for c in (col - 1..col + 1)
@@ -42,6 +46,7 @@ class Cell
     end
   end
 
+  # just validate if cell is inside the table
   def validate_position(game, r, c)
     (r >= 0 && r < game.row && c >= 0 && c < game.col)
   end
