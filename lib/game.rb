@@ -21,7 +21,7 @@ loop do
   # set flag
   when 'f'
     system 'clear'
-    Interact.set_flag(game)
+    Interact.put_flag(game)
   # change print view
   when 'p'
     system 'clear'
@@ -30,7 +30,7 @@ loop do
   # show table state
   when 't'
     system 'clear'
-    if print_type%2 == 0
+    if print_type.even?
       Printer.new.print_table(game.board_state)
     else
       PrettyPrinter.new.print_table(game.board_state)
@@ -38,10 +38,10 @@ loop do
   # x-ray view
   when 'x'
     system 'clear'
-    if print_type%2 == 0
-      Printer.new.print_table(game.board_state({xray:true}))
+    if print_type.even?
+      Printer.new.print_table(game.board_state(xray: true))
     else
-      PrettyPrinter.new.print_table(game.board_state({xray:true}))
+      PrettyPrinter.new.print_table(game.board_state(xray: true))
     end
   # exit game
   when 'e'
@@ -50,18 +50,14 @@ loop do
   end
 
   # after any action, show the board state
-  if print_type%2 == 0 && option != 't' && option != 'x'
+  if print_type.even? && option != 't' && option != 'x'
     Printer.new.print_table(game.board_state)
   elsif option != 't' && option != 'x'
     PrettyPrinter.new.print_table(game.board_state)
   end
 
   # check if a game over situation occurs
-  if game.still_playing?
-    next
-  else
-    break
-  end
+  game.still_playing? ? next : break
 end
 
 # show this message when game over (victory or lost)
@@ -76,9 +72,9 @@ else
   \t---------------------------------------------------"
 end
 
-puts ""
-if print_type%2 == 0
-  Printer.new.print_table(game.board_state({xray:true}))
+puts ''
+if print_type.even?
+  Printer.new.print_table(game.board_state(xray: true))
 else
-  PrettyPrinter.new.print_table(game.board_state({xray:true}))
+  PrettyPrinter.new.print_table(game.board_state(xray: true))
 end
