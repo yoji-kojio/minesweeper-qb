@@ -2,8 +2,8 @@ require 'matrix'
 require 'colorize'
 require_relative 'cell.rb'
 
+# class that controls the game rules
 class Minesweeper
-
   attr_accessor :row, :col, :n_bombs, :game_over, :table, :left_cells
 
   def initialize(row, col, n_bombs)
@@ -11,7 +11,7 @@ class Minesweeper
     @n_bombs = n_bombs
     @row = row
     @col = col
-    @left_cells = (row*col) - n_bombs
+    @left_cells = (row * col) - n_bombs
     @game_over = false
     @table = create_table
     set_bombs
@@ -19,7 +19,7 @@ class Minesweeper
 
   # build a matrix of cells
   def create_table
-    Matrix.build(row,col) { |r, c| Cell.new(r,c) }
+    Matrix.build(row, col) { |r, c| Cell.new(r, c) }
   end
 
   # set bombs randomly on table
@@ -41,13 +41,13 @@ class Minesweeper
 
   # iterate on cell neighborhood to sum +1 on neighbor_bombs
   def neighbor_bomb_update(b_row, b_col)
-    for r in (b_row - 1..b_row + 1)
-      for c in (b_col - 1..b_col + 1)
+    (b_row - 1..b_row + 1).each do |r|
+      (b_col - 1..b_col + 1).each do |c|
         # avoid cells out of the bounds
         if r < 0 || r >= @row || c < 0 || c >= @col
           next
         else
-          (@table[r, c].is_bomb)? next : (@table[r, c].neighbor_bombs += 1)
+          @table[r, c].is_bomb ? next : @table[r, c].neighbor_bombs += 1
         end
       end
     end
@@ -73,13 +73,13 @@ class Minesweeper
       cell = @table[row, col]
       if cell.flagged
         cell.flagged = false
-        puts "Flag removida".colorize(:green)
+        puts 'Flag removida'.colorize(:green)
         return true
       elsif cell.discovered
-        puts "Não é possível colocar flag em células descobertas".colorize(:yellow)
+        puts 'Não é possível colocar flag em células descobertas'.colorize(:yellow)
       else
         cell.flagged = true
-        puts "Flag inserida".colorize(:green)
+        puts 'Flag inserida'.colorize(:green)
         return true
       end
     else
@@ -88,7 +88,7 @@ class Minesweeper
   end
 
   def still_playing?
-    @game_over? false : true
+    @game_over ? false : true
   end
 
   def victory?
@@ -98,8 +98,8 @@ class Minesweeper
   # return the actual situation of the game in characters representation:
   # (Flag: F, Undiscovered: #, Bomb: B, clear: neighbor bomb count)
   def board_state(args = nil)
-    game_state = Matrix.build(@row,@col) do |r, c|
-      if args == nil
+    Matrix.build(@row, @col) do |r, c|
+      if args.nil?
         map_game_state(@table[r, c])
       elsif args[:xray]
         map_xray_game_state(@table[r, c])
@@ -109,25 +109,25 @@ class Minesweeper
 
   def map_game_state(cell)
     if cell.flagged
-      return 'F'.colorize(:yellow)
+      'F'.colorize(:yellow)
     elsif !cell.discovered
-      return '#'
+      '#'
     elsif cell.is_bomb
-      return 'B'.colorize(:red)
+      'B'.colorize(:red)
     else
-      return cell.neighbor_bombs.to_s.colorize(:green)
+      cell.neighbor_bombs.to_s.colorize(:green)
     end
   end
 
   def map_xray_game_state(cell)
     if cell.is_bomb
-      return 'B'.colorize(:red)
+      'B'.colorize(:red)
     else
-      return cell.neighbor_bombs.to_s.colorize(:red)
+      cell.neighbor_bombs.to_s.colorize(:red)
     end
   end
 
-  # trying to handle errors... 
+  # trying to handle errors...
   def validate_entry(row, col, n_bombs)
     raise(ArgumentError, 'Negative row number') unless row > 0
     raise(ArgumentError, 'Negative column number') unless col > 0
@@ -144,5 +144,4 @@ class Minesweeper
   def validate_flag_position(r, c)
     (r >= 0 && r < @row && c >= 0 && c < @col)
   end
-
 end

@@ -2,7 +2,6 @@ require 'colorize'
 
 # Cell class defines the cells property and behavior
 class Cell
-
   attr_accessor :row, :col, :discovered, :flagged, :neighbor_bombs, :is_bomb
 
   def initialize(row, col)
@@ -30,12 +29,13 @@ class Cell
   # if cell has no neighbor bombs, check 8-neighborhood cell and expand
   # recursively until reach a cell with neighbor bombs
   def expand_cell(game)
-    for r in (row - 1..row + 1)
-      for c in (col - 1..col + 1)
+    (row - 1..row + 1).each do |r|
+      (col - 1..col + 1).each do |c|
         next unless validate_position(game, r, c)
         cell = game.table[r, c]
         next if cell.discovered || (row == r && col == c)
         cell.discovered = true
+        cell.flagged = false
         game.left_cells -= 1
         cell.expand_cell(game) if cell.neighbor_bombs.zero?
       end
@@ -46,5 +46,4 @@ class Cell
   def validate_position(game, r, c)
     (r >= 0 && r < game.row && c >= 0 && c < game.col)
   end
-
 end

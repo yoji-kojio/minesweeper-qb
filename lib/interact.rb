@@ -1,8 +1,8 @@
 require_relative 'minesweeper.rb'
 require 'pry'
 
+# module that control i/o
 module Interact
-
   # action menu
   def show_menu
     puts "\t--------------------MENU--------------------
@@ -30,16 +30,15 @@ module Interact
   def click_cell(game)
     puts 'Digite as coordenadas de linha e coluna, respectivamente. Ex: 1 2'
     r, c = gets.split.map(&:to_i)
-    puts ""
-    (r.nil? || c.nil?)? (puts "Argumentos inválidos!".colorize(:red)) : (game.play(r-1, c-1))
+    puts ''
+    r.nil? || c.nil? ? (puts 'Argumentos inválidos!'.colorize(:red)) : game.play(r - 1, c - 1)
   end
 
   # get flag coordinates
-  def set_flag(game)
+  def put_flag(game)
     puts 'Digite as coordenadas de linha e coluna, respectivamente. Ex: 1 2'
     r, c = gets.split.map(&:to_i)
-    puts ""
-    (r.nil? || c.nil?)? (puts "Argumentos inválidos!\n".colorize(:red)) : (game.flag(r-1, c-1))
+    puts ''
+    r.nil? || c.nil? ? (puts "Argumentos inválidos!\n".colorize(:red)) : game.flag(r - 1, c - 1)
   end
-
 end
