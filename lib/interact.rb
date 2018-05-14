@@ -1,4 +1,4 @@
-require './minesweeper.rb'
+require_relative 'minesweeper.rb'
 require 'pry'
 
 module Interact

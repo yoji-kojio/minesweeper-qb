@@ -1,6 +1,6 @@
-require './minesweeper.rb'
-require './interact.rb'
-require './printer.rb'
+require_relative 'minesweeper.rb'
+require_relative 'interact.rb'
+require_relative 'printer.rb'
 
 include Interact
 

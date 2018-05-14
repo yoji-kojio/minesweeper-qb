@@ -16,11 +16,7 @@ class Cell
   
   # what if the cell is clicked
   def onclick_action(game)
-    if @flagged
-      puts "Posição possui flag!\n".colorize(:yellow)
-    elsif @discovered
-      puts "Posição já foi descoberta!\n".colorize(:red)
-    elsif @is_bomb
+    if @is_bomb
       @discovered = true
       game.game_over = true
     else
