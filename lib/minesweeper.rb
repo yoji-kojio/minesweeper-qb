@@ -1,6 +1,6 @@
 require 'matrix'
 require 'colorize'
-require './cell.rb'
+require_relative 'cell.rb'
 
 class Minesweeper
 
@@ -56,19 +56,20 @@ class Minesweeper
   # play/click command
   def play(row, col)
     # just check if click is inside the table
+    # and not flagged or discovered
     if validate_position(row, col)
       @table[row, col].onclick_action(self)
+      # if there is no cells left, game over! (victory)
       @game_over = true if @left_cells.zero?
+      return true
     else
       puts "Posição inválida\n".colorize(:red)
     end
-    # if there is no cells left, game over! (victory)
-    @game_over = true if left_cells.zero?
   end
 
   def flag(row, col)
     # just check if click is inside the table
-    if validate_position(row, col)
+    if validate_flag_position(row, col)
       cell = @table[row, col]
       if cell.flagged
         cell.flagged = false
@@ -79,6 +80,7 @@ class Minesweeper
       else
         cell.flagged = true
         puts "Flag inserida".colorize(:green)
+        return true
       end
     else
       puts "Posição inválida\n".colorize(:red)
@@ -135,6 +137,11 @@ class Minesweeper
 
   # check if the coordinates belong to table
   def validate_position(r, c)
+    cell = @table[r, c]
+    (r >= 0 && r < @row && c >= 0 && c < @col && !cell.flagged && !cell.discovered)
+  end
+
+  def validate_flag_position(r, c)
     (r >= 0 && r < @row && c >= 0 && c < @col)
   end
 
