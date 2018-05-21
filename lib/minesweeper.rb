@@ -44,11 +44,8 @@ class Minesweeper
     (b_row - 1..b_row + 1).each do |r|
       (b_col - 1..b_col + 1).each do |c|
         # avoid cells out of the bounds
-        if r < 0 || r >= @row || c < 0 || c >= @col
-          next
-        else
-          @table[r, c].is_bomb ? next : @table[r, c].neighbor_bombs += 1
-        end
+        next if r < 0 || r >= @row || c < 0 || c >= @col
+        @table[r, c].is_bomb ? next : @table[r, c].neighbor_bombs += 1
       end
     end
   end
@@ -73,13 +70,13 @@ class Minesweeper
       cell = @table[row, col]
       if cell.flagged
         cell.flagged = false
-        puts 'Flag removida'.colorize(:green)
+        puts "Flag removida\n".colorize(:green)
         return true
       elsif cell.discovered
         puts 'Não é possível colocar flag em células descobertas'.colorize(:yellow)
       else
         cell.flagged = true
-        puts 'Flag inserida'.colorize(:green)
+        puts "Flag inserida\n".colorize(:green)
         return true
       end
     else
@@ -123,16 +120,21 @@ class Minesweeper
     if cell.is_bomb
       'B'.colorize(:red)
     else
-      cell.neighbor_bombs.to_s.colorize(:red)
+      cell.neighbor_bombs.to_s.colorize(:green)
     end
   end
 
-  # trying to handle errors...
+  # handling invalid arguments
   def validate_entry(row, col, n_bombs)
-    raise(ArgumentError, 'Negative row number') unless row > 0
-    raise(ArgumentError, 'Negative column number') unless col > 0
-    raise(ArgumentError, 'Negative bomb number') unless n_bombs > 0
-    raise(ArgumentError, 'Bombs exceed table size') unless n_bombs <= row * col
+    begin
+      raise ArgumentError.new('Negative row number') unless row > 0
+      raise ArgumentError.new('Negative column number') unless col > 0
+      raise ArgumentError.new('Negative bomb number') unless n_bombs > 0
+      raise ArgumentError.new('Bombs exceed table size') unless n_bombs <= row * col
+    rescue
+      puts 'Informações inválidas! Não foi possível iniciar o jogo'.colorize(:yellow)
+      abort 'Encerrando o jogo...!'.colorize(:yellow)
+    end
   end
 
   # check if the coordinates belong to table

@@ -1,6 +1,6 @@
 require 'colorize'
 
-# printer that print meh...
+# printer class that print meh...
 class Printer
   def print_table(game_state)
     (0...game_state.row_count).each do |r|
@@ -12,7 +12,7 @@ class Printer
   end
 end
 
-# printer that print so beautiful :o
+# printer class that print so beautiful :o
 class PrettyPrinter
   def print_table(game_state)
     pretty_row = (game_state.row_count * 2) + 1

@@ -15,14 +15,19 @@ class Cell
   
   # what if the cell is clicked
   def onclick_action(game)
-    if @is_bomb
-      @discovered = true
-      game.game_over = true
-    else
-      @discovered = true
-      game.left_cells -= 1
-      expand_cell(game) if @neighbor_bombs.zero?
-      return true
+    begin
+      if @is_bomb
+        @discovered = true
+        game.game_over = true
+      else
+        @discovered = true
+        game.left_cells -= 1
+        expand_cell(game) if @neighbor_bombs.zero?
+        return true
+      end
+    rescue SystemStackError
+      puts 'Boatos de que a pilha não aguentou a expansão...'.colorize(:red)
+      abort 'Encerrando o programa...!'.colorize(:red)
     end
   end
 

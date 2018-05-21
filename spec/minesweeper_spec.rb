@@ -4,22 +4,39 @@ describe '#Inicialização do jogo' do
   before :each do
     @game = Minesweeper.new(10, 15, 20)
   end
-  context 'Consistencia dos dados' do
-    it 'n_bombs inicializado' do
+  context 'Verifica se o jogo' do
+    it 'foi instanciado' do
+      expect(@game).to be_an_instance_of(Minesweeper)
+    end
+    it 'inicializou n_bombs' do
       expect(@game.n_bombs).to eql(20)
     end
-    it 'row inicializado' do
+    it 'inicializou row' do
       expect(@game.row).to eql(10)
     end
-    it 'col inicializado' do
+    it 'inicializou col' do
       expect(@game.col).to eql(15)
     end
-    it 'left_cells inicializado' do
+    it 'inicializou left_cells' do
       expect(@game.left_cells).to eql(130)
     end
-    it 'game_over inicializado' do
+    it 'inicializou game_over' do
       expect(@game.game_over).to be false
     end
+  end
+end
+
+describe "#Create table" do
+  before :each do
+    @game = Minesweeper.new(10, 10, 20)
+  end
+  it 'Criou matriz corretamente' do
+    expect(@game.create_table).to be_an_instance_of(Matrix)
+    expect(@game.create_table.first).to be_an_instance_of(Cell)
+  end
+  it 'Bombas/Left cells' do
+    @game.set_bombs
+    expect(@game.left_cells).to eql(80)
   end
 end
 
@@ -27,19 +44,19 @@ describe '#Play test' do
   before :each do
     @game = Minesweeper.new(10, 15, 20)
   end
-  context 'Testar play valido e invalido' do
-    it 'play valido' do
+  context 'Testar jogada' do
+    it 'válida' do
       @game.table[1, 1].discovered = false
       expect(@game.play(1, 1)).to be true
     end
-    it 'play fora do campo' do
+    it 'fora do campo' do
       expect(@game.play(-1, 1)).to_not be true
     end
-    it 'play em celula descoberta' do
+    it 'em celula descoberta' do
       @game.table[1, 1].discovered = true
       expect(@game.play(1, 1)).to_not be true
     end
-    it 'play em celula com bandeira' do
+    it 'em celula com bandeira' do
       @game.table[1, 1].flagged = true
       expect(@game.play(1, 1)).to_not be true
     end
@@ -50,18 +67,18 @@ describe '#Flag test' do
   before :each do
     @game = Minesweeper.new(10, 10, 15)
   end
-  context 'Testar flag valido e invalido' do
-    it 'flag valido' do
+  context 'Testar flag' do
+    it 'valido' do
       expect(@game.flag(1, 1)).to be true
     end
-    it 'flag fora do campo' do
+    it 'fora do campo' do
       expect(@game.flag(-1, 1)).to_not be true
     end
-    it 'flag em celula descoberta' do
+    it 'celula descoberta' do
       @game.table[1, 1].discovered = true
       expect(@game.flag(1, 1)).to_not be true
     end
-    it 'flag em celula com flag' do
+    it 'celula com flag' do
       @game.table[1, 1].flagged = true
       expect(@game.flag(1, 1)).to be true
     end
@@ -72,7 +89,7 @@ describe '#Game conditions' do
   before :each do
     @game = Minesweeper.new(10, 10, 15)
   end
-  context 'Testar condições do jogo' do
+  context 'Testar se o jogo' do
     it 'Still playing? yes' do
       @game.game_over = true
       expect(@game.still_playing?).to be false
@@ -89,5 +106,28 @@ describe '#Game conditions' do
       @game.left_cells = 10
       expect(@game.victory?).to be false
     end
+  end
+end
+
+describe '#Game state' do
+  before :each do
+    @game = Minesweeper.new(10, 10, 15)
+    @cell = Cell.new(9, 9)
+  end
+  it 'Board state' do
+    expect(@game.board_state).to be_an_instance_of(Matrix)
+  end
+  it 'Map game state (flagged)' do
+    @cell.flagged = true
+    expect(@game.map_game_state(@cell)).to eql('F'.colorize(:yellow))
+  end
+  it 'Map game state (undiscovered)' do
+    @cell.discovered = false
+    expect(@game.map_game_state(@cell)).to eql('#')
+  end
+  it 'Map game state (bomb)' do
+    @cell.is_bomb = true
+    @cell.discovered = true
+    expect(@game.map_game_state(@cell)).to eql('B'.colorize(:red))
   end
 end
