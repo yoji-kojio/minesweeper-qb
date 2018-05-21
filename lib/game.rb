@@ -1,5 +1,6 @@
 require_relative 'interact.rb'
 require_relative 'printer.rb'
+require 'colorize'
 
 include Interact
 
@@ -44,6 +45,8 @@ loop do
   when 'e'
     # exit game implies lost
     break
+  else
+    puts "Comando inválido! Por favor, digite uma das opções válidas.\n".colorize(:red)
   end
 
   # after any action, show the board state
