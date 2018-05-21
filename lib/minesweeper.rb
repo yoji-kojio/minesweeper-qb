@@ -73,7 +73,7 @@ class Minesweeper
         puts "Flag removida\n".colorize(:green)
         return true
       elsif cell.discovered
-        puts 'Não é possível colocar flag em células descobertas'.colorize(:yellow)
+        puts 'Célula já foi descoberta!'.colorize(:yellow)
       else
         cell.flagged = true
         puts "Flag inserida\n".colorize(:green)
@@ -92,8 +92,8 @@ class Minesweeper
     left_cells.zero?
   end
   
-  # return the actual situation of the game in characters representation:
-  # (Flag: F, Undiscovered: #, Bomb: B, clear: neighbor bomb count)
+  # return the actual situation of the game in char representation:
+  # (Flag: F, Undiscovered: #, Bomb: B, Clear: neighbor bomb count)
   def board_state(args = nil)
     Matrix.build(@row, @col) do |r, c|
       if args.nil?
@@ -116,6 +116,7 @@ class Minesweeper
     end
   end
 
+  # x-ray! just show bombs and neighbor bombs
   def map_xray_game_state(cell)
     if cell.is_bomb
       'B'.colorize(:red)
@@ -124,7 +125,7 @@ class Minesweeper
     end
   end
 
-  # handling invalid arguments
+  # handling game start invalid arguments
   def validate_entry(row, col, n_bombs)
     begin
       raise ArgumentError.new('Negative row number') unless row > 0
@@ -137,7 +138,7 @@ class Minesweeper
     end
   end
 
-  # check if the coordinates belong to table
+  # check if the coordinates belongs to table and can be clicked
   def validate_position(r, c)
     cell = @table[r, c]
     (r >= 0 && r < @row && c >= 0 && c < @col && !cell.flagged && !cell.discovered)

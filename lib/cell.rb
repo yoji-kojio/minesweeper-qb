@@ -13,8 +13,9 @@ class Cell
     @is_bomb = false
   end
   
-  # what if the cell is clicked
+  # cell click! what happens?!
   def onclick_action(game)
+    # imagine a big table...now imagine the expand method...BOOM!
     begin
       if @is_bomb
         @discovered = true
