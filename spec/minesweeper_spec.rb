@@ -5,6 +5,9 @@ describe '#Inicialização do jogo' do
     @game = Minesweeper.new(10, 15, 20)
   end
   context 'Consistencia dos dados' do
+    it 'instanciado' do
+      expect(@game).to be_an_instance_of(Minesweeper)
+    end
     it 'n_bombs inicializado' do
       expect(@game.n_bombs).to eql(20)
     end
@@ -20,6 +23,20 @@ describe '#Inicialização do jogo' do
     it 'game_over inicializado' do
       expect(@game.game_over).to be false
     end
+  end
+end
+
+describe "#Create table" do
+  before :each do
+    @game = Minesweeper.new(10, 10, 20)
+  end
+  it 'table created' do
+    expect(@game.create_table).to be_an_instance_of(Matrix)
+    expect(@game.create_table.first).to be_an_instance_of(Cell)
+  end
+  it 'bombs seted' do
+    @game.set_bombs
+    expect(@game.left_cells).to eql(80)
   end
 end
 

@@ -1,4 +1,3 @@
-require_relative 'minesweeper.rb'
 require_relative 'interact.rb'
 require_relative 'printer.rb'
 
@@ -16,11 +15,9 @@ loop do
   case option
   # click cell
   when 'c'
-    system 'clear'
     Interact.click_cell(game)
   # set flag
   when 'f'
-    system 'clear'
     Interact.put_flag(game)
   # change print view
   when 'p'
@@ -55,7 +52,6 @@ loop do
   elsif option != 't' && option != 'x'
     PrettyPrinter.new.print_table(game.board_state)
   end
-
   # check if a game over situation occurs
   game.still_playing? ? next : break
 end
@@ -78,3 +74,4 @@ if print_type.even?
 else
   PrettyPrinter.new.print_table(game.board_state(xray: true))
 end
+puts ''
